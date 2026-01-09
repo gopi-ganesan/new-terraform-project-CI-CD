@@ -7,6 +7,11 @@ variable "app_service_frontend" {
     type = string
 }
 
+variable "app_service_admin" { 
+    description = "food-admin-service"
+    type = string
+}
+
 variable "aws_ecs_cluster" {
     description = "food-delivery-cluster"
     type = string
@@ -17,12 +22,12 @@ variable "aws_ecs_task_definition" {
     type = string
 }
 
-variable "admin_task" {
-  description = "food-admin-task"
-}
-
 variable "ecr_repositories" {
   description = "List of ECR repositories"
   type        = list(string)
   default     = ["frontend", "backend", "admin"]
+}
+
+variable "image_tag" {
+  default = "latest"
 }

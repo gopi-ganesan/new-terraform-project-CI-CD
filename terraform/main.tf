@@ -30,8 +30,7 @@ resource "aws_ecs_task_definition" "frontend_task" {
   container_definitions = jsonencode([
     {
       name  = "frontend"
-      image = "${aws_ecr_repository.repos["frontend"].repository_url}:latest"
-
+      image ="${aws_ecr_repository.repos["frontend"].repository_url}:${var.image_tag}"
       portMappings = [{
         containerPort = 80
       }]
@@ -53,7 +52,7 @@ resource "aws_ecs_task_definition" "backend_task" {
   container_definitions = jsonencode([
     {
       name  = "backend"
-      image = "${aws_ecr_repository.repos["backend"].repository_url}:latest"
+      image = "${aws_ecr_repository.repos["backend"].repository_url}:${var.image_tag}"
 
       portMappings = [{
         containerPort = 4000
@@ -77,7 +76,7 @@ resource "aws_ecs_task_definition" "admin_task" {
   container_definitions = jsonencode([
     {
       name  = "admin"
-      image ="${aws_ecr_repository.repos["admin"].repository_url}:latest"
+      image = "${aws_ecr_repository.repos["admin"].repository_url}:${var.image_tag}"
 
       portMappings = [{
         containerPort = 80
@@ -101,7 +100,7 @@ resource "aws_ecs_service" "food-backend-service-app" {
   network_configuration {
     subnets         = data.aws_subnets.default.ids
     security_groups = [aws_security_group.backend_sg.id]
-    assign_public_ip = false
+      assign_public_ip = false
   }
 }
 
@@ -120,8 +119,8 @@ resource "aws_ecs_service" "food-frontend-service-app" {
   }
 }
 
-resource "aws_ecs_service" "food-admin-service-app" {   
-  name            = var.admin_task
+resource "aws_ecs_service" "app_service_admin" {   
+  name            = var.app_service_admin
   cluster         = aws_ecs_cluster.APP_CLUSTER.id
   task_definition = aws_ecs_task_definition.admin_task.arn
   desired_count   = 1
