@@ -36,7 +36,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 git(
-                    url: 'https://github.com/gopi-ganesan/food-delivery-CI-CD.git',
+                    url: 'https://github.com/gopi-ganesan/new-terraform-project-CI-CD.git',
                     branch: 'main',
                     credentialsId: 'github-token'
                 )
