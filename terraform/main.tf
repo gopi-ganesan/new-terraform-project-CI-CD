@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "frontend_task" {
   container_definitions = jsonencode([
     {
       name  = "frontend"
-      image = "${aws_ecr_repository.repos["frontend/food-ewb"].repository_url}:${var.image_tag}"
+      image = "${aws_ecr_repository.repos["frontend"].repository_url}:${var.image_tag}"
       portMappings = [{
         containerPort = 80
       }]
@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "backend_task" {
   container_definitions = jsonencode([
     {
       name  = "backend"
-      image = "${aws_ecr_repository.repos["backend/food-ewb"].repository_url}:${var.image_tag}"
+      image = "${aws_ecr_repository.repos["backend"].repository_url}:${var.image_tag}"
 
       portMappings = [{
         containerPort = 4000
@@ -76,7 +76,7 @@ resource "aws_ecs_task_definition" "admin_task" {
   container_definitions = jsonencode([
     {
       name  = "admin"
-      image = "${aws_ecr_repository.repos["admin/food-ewb"].repository_url}:${var.image_tag}"
+      image = "${aws_ecr_repository.repos["admin"].repository_url}:${var.image_tag}"
 
       portMappings = [{
         containerPort = 80
