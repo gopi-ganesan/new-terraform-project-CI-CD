@@ -92,6 +92,8 @@ pipeline {
                                 sh 'terraform apply -input=false tfplan'
                             } else {
                                 sh 'terraform destroy -auto-approve'
+                                currentBuild.result = 'SUCCESS'
+                                return
                             }
                         }
                     }
