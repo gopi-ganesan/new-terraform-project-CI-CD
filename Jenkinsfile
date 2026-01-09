@@ -102,12 +102,18 @@ pipeline {
         }
 
         stage('Build Docker Images') {
+            when {
+                execution{ parameters.action == 'apply'}
+            }
             steps {
                 sh "docker-compose -f docker-compose.yml build"
             }
         }
 
         stage('Login to ECR') {
+            when {
+                expression { parameters.action == 'apply'}
+            }
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
                     sh """
@@ -119,6 +125,9 @@ pipeline {
         }
 
         stage('Push Docker Images to ECR') {
+            when {
+                expression { parameters.action == 'apply'}
+            }
             steps {
                 sh """
                     docker tag ${LOCAL_BACKEND_IMAGE} ${ECR_REGISTRY}/${BACKEND_REPO}:${IMAGE_TAG}
@@ -134,6 +143,9 @@ pipeline {
         }
 
         stage('Deploy to ECS') {
+            when {
+                expression { parameters.action == 'apply'}
+            }
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
                     sh """
@@ -154,6 +166,15 @@ pipeline {
                     """
                 }
             }
+        }
+    }
+
+    post {
+        SUCCESS {
+            echo 'Pipeline completed successfully.'
+        }
+        FAILURE {
+            echo 'Pipeline failed. Please check the logs for details.'
         }
     }
 }
