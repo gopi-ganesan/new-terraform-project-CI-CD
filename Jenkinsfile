@@ -103,7 +103,7 @@ pipeline {
 
         stage('Build Docker Images') {
             when {
-                execution{ parameters.action == 'apply'}
+                expression{ params.action == 'apply'}
             }
             steps {
                 sh "docker-compose -f docker-compose.yml build"
@@ -112,7 +112,7 @@ pipeline {
 
         stage('Login to ECR') {
             when {
-                expression { parameters.action == 'apply'}
+                expression { params.action == 'apply'}
             }
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
@@ -126,7 +126,7 @@ pipeline {
 
         stage('Push Docker Images to ECR') {
             when {
-                expression { parameters.action == 'apply'}
+                expression { params.action == 'apply'}
             }
             steps {
                 sh """
@@ -144,7 +144,7 @@ pipeline {
 
         stage('Deploy to ECS') {
             when {
-                expression { parameters.action == 'apply'}
+                expression { params.action == 'apply'}
             }
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
@@ -170,10 +170,10 @@ pipeline {
     }
 
     post {
-        SUCCESS {
+        success {
             echo 'Pipeline completed successfully.'
         }
-        FAILURE {
+        failure {
             echo 'Pipeline failed. Please check the logs for details.'
         }
     }
